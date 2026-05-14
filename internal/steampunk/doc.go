@@ -1,45 +1,34 @@
-// Package steampunk provides primitives for simulating a steampunk mechanical
-// system, including gears, gear trains, boilers, and steam engines.
+// Package steampunk provides a simulation of steampunk mechanical components.
 //
-// # Gears
+// # Components
 //
-// A [Gear] is a toothed wheel with a given number of teeth and a module (pitch
-// size). Two gears can mesh together when they share the same module. Use
-// [NewGear] to create a gear and [Gear.MeshWith] to validate meshing.
+// The package models the following interconnected parts of a steam-powered
+// machine:
 //
-// # Gear Trains
+//   - Boiler    – heats water and maintains steam pressure.
+//   - Valve     – controls the flow of steam between components.
+//   - Pipeline  – connects valves and routes steam to consumers.
+//   - Engine    – orchestrates boiler, pipeline and power output.
+//   - Gear      – a toothed wheel that meshes with other gears.
+//   - GearTrain – a chain of meshed gears that transmits rotation.
+//   - Piston    – converts steam pressure into linear mechanical force.
+//   - Crankshaft – converts piston strokes into rotational torque.
 //
-// A [GearTrain] is an ordered sequence of meshing gears. The overall gear
-// ratio is the product of each successive pair's tooth ratio. Use
-// [NewGearTrain] to create a train and [GearTrain.AddGear] to extend it.
+// # Typical Usage
 //
-// # Boilers
+//	b, _ := steampunk.NewBoiler("main", 100, 12)
+//	v, _ := steampunk.NewValve("inlet", 1.0)
+//	p, _ := steampunk.NewPipeline("steam-line", 10)
+//	p.AddValve(v)
 //
-// A [Boiler] generates steam pressure from heat. Pressure drives torque
-// output. Use [NewBoiler] to create a boiler, [Boiler.Heat] to raise
-// temperature, and [Boiler.Torque] to read available torque.
+//	piston, _ := steampunk.NewPiston("P1", 10.0, 15.0)
+//	crank, _  := steampunk.NewCrankshaft("CS1", 0.05)
+//	crank.AttachPiston(piston)
 //
-// # Engines
-//
-// An [Engine] couples a [Boiler] to a [GearTrain] to deliver mechanical
-// power at the output shaft. Use [NewEngine] to assemble an engine,
-// [Engine.Start] to begin operation, and [Engine.OutputTorque] /
-// [Engine.OutputRPM] to read shaft characteristics.
-//
-// Example:
-//
-//	boiler := steampunk.NewBoiler(150.0, 20.0)
-//	boiler.Heat(140.0)
-//
-//	g1, _ := steampunk.NewGear(20, 1.0)
-//	g2, _ := steampunk.NewGear(60, 1.0)
-//	gt := steampunk.NewGearTrain()
-//	gt.AddGear(g1)
-//	gt.AddGear(g2)
-//
-//	engine := steampunk.NewEngine(boiler, gt)
-//	if err := engine.Start(); err != nil {
-//		log.Fatal(err)
-//	}
-//	fmt.Println(engine)
+//	// Heat boiler, open valve, apply pressure to piston, rotate crank.
+//	b.Heat(50)
+//	v.Open()
+//	piston.ApplyPressure(p.EffectivePressure(b.Pressure))
+//	crank.Rotate(0.1)
+//	fmt.Println(crank)
 package steampunk
