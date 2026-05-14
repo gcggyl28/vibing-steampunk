@@ -1,34 +1,38 @@
-// Package steampunk provides a simulation of steampunk mechanical components.
+// Package steampunk provides a simulation of a Victorian-era steam-powered
+// mechanical system. It models the core components of a steampunk engine:
 //
-// # Components
+//   - Boiler: generates steam pressure by heating water
+//   - Valve: controls steam flow with adjustable positions
+//   - Pipeline: connects components and routes steam through valves
+//   - Piston: converts steam pressure into linear mechanical force
+//   - Crankshaft: converts piston force into rotational torque
+//   - Gear / GearTrain: transmits and transforms rotational motion
+//   - Governor: regulates engine speed via feedback-controlled valve
+//   - Engine: orchestrates the full power cycle
+//   - Condenser: recovers exhaust steam as condensate for boiler reuse
+//   - SteamCircuit: models a closed-loop boiler–pipeline–condenser system
 //
-// The package models the following interconnected parts of a steam-powered
-// machine:
+// Components are designed to be composed into larger assemblies. Each
+// component exposes a String() method for human-readable status output,
+// suitable for terminal dashboards or logging.
 //
-//   - Boiler    – heats water and maintains steam pressure.
-//   - Valve     – controls the flow of steam between components.
-//   - Pipeline  – connects valves and routes steam to consumers.
-//   - Engine    – orchestrates boiler, pipeline and power output.
-//   - Gear      – a toothed wheel that meshes with other gears.
-//   - GearTrain – a chain of meshed gears that transmits rotation.
-//   - Piston    – converts steam pressure into linear mechanical force.
-//   - Crankshaft – converts piston strokes into rotational torque.
+// Units used throughout:
 //
-// # Typical Usage
+//	Pressure : bar
+//	Temperature : degrees Celsius
+//	Force : Newtons
+//	Torque : Newton-metres
+//	Angular velocity : radians per second
+//	Flow rate : kg/s
+//	Area : square metres
 //
-//	b, _ := steampunk.NewBoiler("main", 100, 12)
-//	v, _ := steampunk.NewValve("inlet", 1.0)
-//	p, _ := steampunk.NewPipeline("steam-line", 10)
-//	p.AddValve(v)
+Example usage:
 //
-//	piston, _ := steampunk.NewPiston("P1", 10.0, 15.0)
-//	crank, _  := steampunk.NewCrankshaft("CS1", 0.05)
-//	crank.AttachPiston(piston)
-//
-//	// Heat boiler, open valve, apply pressure to piston, rotate crank.
-//	b.Heat(50)
-//	v.Open()
-//	piston.ApplyPressure(p.EffectivePressure(b.Pressure))
-//	crank.Rotate(0.1)
-//	fmt.Println(crank)
+//	b, _ := steampunk.NewBoiler(200.0, 15.0)
+//	b.Heat(250.0)
+//	p, _ := steampunk.NewPipeline("main", 15.0)
+//	c, _ := steampunk.NewCondenser(10.0, 0.8)
+//	sc, _ := steampunk.NewSteamCircuit(b, p, c)
+//	_ = sc.Start()
+//	sc.Tick()
 package steampunk
