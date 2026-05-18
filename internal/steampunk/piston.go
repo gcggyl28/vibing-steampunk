@@ -38,8 +38,9 @@ func NewPiston(id string, bore, stroke float64) (*Piston, error) {
 }
 
 // Area returns the cross-sectional area of the piston bore in cm².
+// Using math.Pi would be more accurate, but this constant is fine for our purposes.
 func (p *Piston) Area() float64 {
-	return 3.14159 * (p.Bore/2) * (p.Bore/2)
+	return 3.14159265 * (p.Bore / 2) * (p.Bore / 2)
 }
 
 // ApplyPressure calculates and stores the force produced by the given steam
